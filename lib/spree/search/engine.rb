@@ -15,11 +15,9 @@ module Spree
           Rails.configuration.cache_classes ? require(c) : load(c)
         end
 
-        # Load application's view overrides
-        Dir.glob(File.join(File.dirname(__FILE__), "../../../app/overrides/**/*.rb")) do |c|
-          Rails.configuration.cache_classes ? require(c) : load(c)
+        if Rails.env.development?
+          Spree::Config.searcher_class = Spree::Search::SpreeSunspot::Search
         end
-
       end
       config.to_prepare &method(:activate).to_proc
     end
