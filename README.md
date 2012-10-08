@@ -1,13 +1,13 @@
 SpreeSunspotSearch
 ==================
 
-Adds Solr search to Spree using [Sunspot](https://github.com/sunspot/sunspot).
+Adds Solr search to Spree Commerce using [Sunspot](https://github.com/sunspot/sunspot).
 
 This is compatible with Spree 1.1.x. Untested on 1.0, but will probably work without too much modification.
 
 
-Install
-=======
+Installation
+============
 
 Add spree_sunspot_search to your Gemfile and run bundler.
 
@@ -28,23 +28,47 @@ Copy the initializer and add `solr_sort_by` to `all.js`:
 
 `rails g spree_sunspot_search:install`
 
-Running
-=======
+Running & Indexing
+==================
 
 Start up Solr (bundled with Sunspot's install)
 
-`rake sunspot:solr:run`
+`bundle exec rake sunspot:solr:run`
 
 Build the index for the first time
 
-`rake sunspot:reindex`
+`bundle exec rake sunspot:reindex`
 
 Stop the solr process:
 
-`rake sunspot:solr:stop`
+`bundle exec rake sunspot:solr:stop`
 
-Customize the Facets Shown
---------------------------
+Customization
+=============
+
+Production Server
+-----------------
+To configure development / production solr server edit `$RAILS_ROOT/config/solr.yml`.
+Read the [sunspot documentation](https://github.com/sunspot/sunspot/wiki/Configuring-solr-for-use-with-sunspot-in-development%2C-testing%2C-and-production)
+and [this great post](http://stackoverflow.com/questions/4937314/setup-sunspot-solr-with-rails-in-production-environment) for more information about production configuration.
+
+Below is a sample config for production that works well for a site with relatively low search traffic and capistrano based deployment:
+
+
+    production:
+      solr:
+        hostname: 127.0.0.1
+        bind_address: 127.0.0.1
+        port: 8983
+        log_level: WARNING
+        max_memory: 100M
+        data_path: /data/spree/shared/solr/data
+        pid_dir: /data/spree/shared/solr/pids
+        solr_home: /data/spree/shared/solr
+      auto_commit_after_request: false
+
+Facets
+------
 
 Edit the [initializer](https://github.com/iloveitaly/spree_sunspot_search/blob/master/lib/generators/templates/spree_sunspot_search.rb) created by the installation script.
 The initializer template should provide enough examples to get you started.
@@ -56,6 +80,7 @@ TODO
 * Sorting by facet criteria and Solr analytics (Best result, Popular, etc.)
 * Open the Sunspot DSL to utilise all the additional data and analytics available through Solr
 * Get the Taxon browsing (e.g. Categories) to utilise the Solr data for speed boosts
+* Testing via https://github.com/justinko/sunspot-rails-tester + rspec
 
 Authors
 =======
