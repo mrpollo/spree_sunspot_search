@@ -31,7 +31,7 @@ module Spree
             facet(:taxon_ids)
             with(:taxon_ids, send(:taxon).id) if send(:taxon)
 
-            order_by sort.to_sym, order.to_sym
+            order_by(sort, order)
             with(:is_active, true)
             keywords(query)
             paginate(:page => page, :per_page => per_page)
@@ -54,8 +54,12 @@ module Spree
           @properties[:query] = params[:keywords]
           @properties[:price] = params[:price]
 
-          @properties[:sort] = params[:sort] || :score
-          @properties[:order] = params[:order] || :desc
+          @properties[:sort] = params[:sort].try(:to_sym) || :score
+          @properties[:order] = params[:order].try(:to_sym) || :desc
+
+          # ensure that :sort and :order are legit
+          @properties[:sort] = :score unless Spree::Search::SpreeSunspot.configuration.sort_fields.keys.include? @properties[:sort]
+          @properties[:order] = :desc unless [:desc, :asc].include? @properties[:sort]
 
           Spree::Search::SpreeSunspot.configuration.display_facets.each do |name|
             @properties[name] ||= params["#{name}_facet"]
