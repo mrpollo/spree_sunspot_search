@@ -47,6 +47,8 @@ module Spree
           # as well as handles pagination
           super
 
+          conf = Spree::Search::SpreeSunspot.configuration
+
           # TODO should do some parameter cleaning here: only allow valid search params to be passed through
           # the faceting partial is kind of 'dumb' about the params object: doesn't clean it out and just
           # dumps all the params into the query string
@@ -54,14 +56,14 @@ module Spree
           @properties[:query] = params[:keywords]
           @properties[:price] = params[:price]
 
-          @properties[:sort] = params[:sort].try(:to_sym) || :score
-          @properties[:order] = params[:order].try(:to_sym) || :desc
+          @properties[:sort] = params[:sort] || conf.default_sort_key
+          @properties[:order] = params[:order] || conf.default_sort_order
 
           # ensure that :sort and :order are legit
-          @properties[:sort] = :score unless Spree::Search::SpreeSunspot.configuration.sort_fields.keys.include? @properties[:sort]
+          @properties[:sort] = :score unless conf.sort_fields.keys.include? @properties[:sort]
           @properties[:order] = :desc unless [:desc, :asc].include? @properties[:sort]
 
-          Spree::Search::SpreeSunspot.configuration.display_facets.each do |name|
+          conf.display_facets.each do |name|
             @properties[name] ||= params["#{name}_facet"]
           end
         end
