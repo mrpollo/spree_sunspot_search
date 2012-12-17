@@ -7,7 +7,6 @@ module Spree
 
       initializer "spree.sunspot_search.preferences", :after => "spree.environment" do |app|
         Spree::Config.searcher_class = Spree::Search::Sunspot
-        Spree::SunspotSearch::Config = Spree::SunspotConfiguration.new
       end
 
       def self.activate
@@ -16,7 +15,7 @@ module Spree
         end
 
         if Rails.env.development?
-          Spree::Config.searcher_class = Spree::Search::SpreeSunspot::Search
+          Spree::Config.searcher_class = Spree::Search::Sunspot
         end
       end
       config.to_prepare &method(:activate).to_proc
