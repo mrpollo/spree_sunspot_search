@@ -43,8 +43,7 @@ module Spree
         protected
 
         def prepare(params)
-          # super copies over :taxon and other variables into properties
-          # as well as handles pagination
+          # super copies over :taxon and other variables into properties as well as handles pagination
           super
 
           conf = Spree::Search::SpreeSunspot.configuration
@@ -60,8 +59,8 @@ module Spree
           @properties[:order] = params[:order] || conf.default_sort_order
 
           # ensure that :sort and :order are legit
-          @properties[:sort] = :score unless conf.sort_fields.keys.include? @properties[:sort]
-          @properties[:order] = :desc unless [:desc, :asc].include? @properties[:order]
+          @properties[:sort] = :score unless conf.sort_fields.keys.include? @properties[:sort].to_sym
+          @properties[:order] = :desc unless [:desc, :asc].include? @properties[:order].to_sym
 
           conf.display_facets.each do |name|
             @properties[name] ||= params["#{name}_facet"]
