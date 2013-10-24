@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 1.1'
+  s.add_dependency 'spree_core', '~ 2.1'
   s.add_dependency 'sunspot_rails', '~> 1.3.3'
   s.add_dependency 'progress_bar', '0.4.0'
 end
