@@ -55,7 +55,7 @@ Spree::Product.class_eval do
     !deleted_at && available_on &&
       (available_on <= Time.zone.now) &&
         if Spree::Config.track_inventory_levels
-          (Spree::Config[:allow_backorder_shipping] || count_on_hand > 0)
+          (Spree::Config[:allow_backorder_shipping] || total_on_hand > 0)
         else
           true
         end
